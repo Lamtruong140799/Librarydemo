@@ -49,7 +49,8 @@ public class SQLSever extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS "+ Table_Name1);
+        onCreate(db);
     }
 
     public void AddUser(User user) {
@@ -85,6 +86,7 @@ public class SQLSever extends SQLiteOpenHelper {
         }else{
             list = null;
         }
+        cursor.close();
         db.close();
         return list;
     }
@@ -105,6 +107,7 @@ public class SQLSever extends SQLiteOpenHelper {
         }else{
             s = null;
         }
+        cursor.close();
         db.close();
         return s;
     }

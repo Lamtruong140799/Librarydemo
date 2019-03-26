@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.example.librarydemo.DBBook.Book;
 import com.example.librarydemo.DBLog.Log;
+import com.example.librarydemo.Database.SQLBook;
 
 import java.util.ArrayList;
 
@@ -24,9 +25,9 @@ public class LogInformation extends AppCompatActivity {
         final TextView bookid = (TextView) findViewById(R.id.Log_bookid);
         final TextView ngaydk = (TextView) findViewById(R.id.Log_ngaydk);
         final TextView mota = (TextView) findViewById(R.id.Log_ghichu);
-
+        SQLBook sqlBook = new SQLBook(this);
         Log log = ArrayLog.getLogs();
-        ArrayList<Book> books = LayOutAndLisView.Book_Deefault;
+        ArrayList<Book> books = sqlBook.getAllBook();
         Book book = new Book();
         for (Book x : books){
             if(x.getBookID() == log.getBookID()){

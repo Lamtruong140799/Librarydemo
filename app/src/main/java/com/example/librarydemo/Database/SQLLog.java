@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import com.example.librarydemo.DBLog.Log;
 
@@ -42,7 +43,8 @@ public class SQLLog extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS "+ Table_Name2);
+        onCreate(db);
     }
     //----------------------------------------------------------------------------------------------------------------
     public void AddLog(Log log) {
@@ -57,7 +59,7 @@ public class SQLLog extends SQLiteOpenHelper {
     }
 
     //------------xem nhật ký đăng ký mượn sách---------------------
-    public ArrayList<Log> getAllLog(){
+    public ArrayList<Log> getAllLogs(){
         ArrayList<Log> list = new ArrayList<>();
         String selectLog = "select * from " + Table_Name2;
         db = this.getWritableDatabase();
@@ -69,6 +71,7 @@ public class SQLLog extends SQLiteOpenHelper {
         }else{
             list = null;
         }
+        cursor.close();
         db.close();
         return list;
     }

@@ -14,50 +14,53 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.librarydemo.DBBook.Book;
 import com.example.librarydemo.DBBook.BookAdapter;
 import com.example.librarydemo.DBUser.User;
+import com.example.librarydemo.Database.SQLBook;
 import com.example.librarydemo.Database.SQLSever;
 
 import java.util.ArrayList;
 
 public class LayOutAndLisView extends AppCompatActivity
 
-
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String EXTRA_IMGBOOK = "com.example.application.example.EXTRA_IMGBOOK";
-    public static final String EXTRA_BOOKID = "com.example.application.example.EXTRA_BOOKID";
-    public static final String EXTRA_TENSACH = "com.example.application.example.EXTRA_TENSACH";
-    public static final String EXTRA_THELOAI = "com.example.application.example.EXTRA_THELOAI";
-    public static final String EXTRA_TACGIA = "com.example.application.example.EXTRA_TACGIA";
-    public static final String EXTRA_NAMXB = "com.example.application.example.EXTRA_NAMXB";
-    public static final String EXTRA_SOLUONG = "com.example.application.example.EXTRA_SOLUONG";
-
 
     private ListView lv;
+
     public static ArrayList<Book> Book_Deefault;
 
-    public static ArrayList<Book> getBook() {
+    public static ArrayList<Book> getBook_Deefault() {
         return Book_Deefault;
     }
 
-    private void setBook(ArrayList<Book> book) {
-        this.Book_Deefault = book;
+    public static void setBook_Deefault(ArrayList<Book> book_Deefault) {
+        Book_Deefault = book_Deefault;
     }
-
     private BookAdapter adapter;
+    //---------------User hiện tại------------------------------------
     public static User user_pro;
 
     public static User getUser() {
         return user_pro;
     }
-
     public void setUser(User user) {
         this.user_pro = user;
     }
+
+    //--------------Lấy Sách Đưa vào Book information---------------
+    public static int Bookid;
+    public static int getBookid() {
+        return Bookid;
+    }
+    public static void setBookid(int bookid) {
+        Bookid = bookid;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,41 +80,24 @@ public class LayOutAndLisView extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
     }
 
     public void ArrayBook(){
-
-        ArrayList<Book> book = new ArrayList<>();
-        book.add(new Book(1, "Để Con Được Ốm", "Sách Tự Lực", "Uyên Bùi - BS. Trí Đoàn","2016",R.drawable.book_1, 100));
-        book.add(new Book(2, "Đọc Vị Bất Kỳ Ai", "Sách Tự Lực", "TS. David J. Lieberman","2015",R.drawable.book_2, 100));
-        book.add(new Book(3, "Nghệ Thuật Bán Hàng Bậc Cao", "Nghề Bán Hàng", "Zig Zig Lar","2008",R.drawable.book_3, 100));
-        book.add(new Book(4, "Dấn Thân", "Tiểu Sử", "Sheryl Sandberg","2014",R.drawable.book_4, 100));
-        book.add(new Book(5, "Sức Mạnh Của Ngôn Từ", "Văn học", "Vô Danh","TB-2018",R.drawable.book_5, 100));
-        book.add(new Book(6, "Đắc Nhân Tâm", "Phi Hư Cấu", "Dale Carnegie","2013",R.drawable.book_6, 100));
-        book.add(new Book(7, "Nhà Giả Kim", "Tiểu Thuyết", "Paulo Coelho","2013",R.drawable.book_7, 100));
-        this.setBook(book);
+        SQLBook sqlBook = new SQLBook(this);
+        ArrayList<Book> book = sqlBook.getAllBook();
         adapter = new BookAdapter(this, R.layout.elemen_book, book);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                OpenThongTinSach(position);
+                LayOutAndLisView.setBookid(position+1);
+                OpenThongTinSach();
             }
         });
     }
 
-    public void OpenThongTinSach(int position){
+    public void OpenThongTinSach(){
         Intent intent = new Intent(this, BookInformation.class);
-        intent.putExtra(EXTRA_IMGBOOK, Book_Deefault.get(position).getImgBook());
-        intent.putExtra(EXTRA_BOOKID, Book_Deefault.get(position).getBookID());
-        intent.putExtra(EXTRA_TENSACH, Book_Deefault.get(position).getTenSach());
-        intent.putExtra(EXTRA_THELOAI, Book_Deefault.get(position).getTheLoai());
-        intent.putExtra(EXTRA_TACGIA, Book_Deefault.get(position).getTacGia());
-        intent.putExtra(EXTRA_NAMXB, Book_Deefault.get(position).getNamXB());
-        intent.putExtra(EXTRA_SOLUONG, Book_Deefault.get(position).getSoLuong());
         startActivity(intent);
     }
     public void AnhXa(){
@@ -175,7 +161,6 @@ public class LayOutAndLisView extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(this, UserInformation.class);
             startActivity(intent);

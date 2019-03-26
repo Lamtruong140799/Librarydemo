@@ -14,6 +14,7 @@ import com.example.librarydemo.DBBook.Book;
 import com.example.librarydemo.DBBook.BookAdapter;
 import com.example.librarydemo.DBLog.Log;
 import com.example.librarydemo.DBUser.User;
+import com.example.librarydemo.Database.SQLBook;
 import com.example.librarydemo.Database.SQLLog;
 
 import java.util.ArrayList;
@@ -32,24 +33,24 @@ public class ArrayLog extends AppCompatActivity {
 
     public static Log logs;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_array_log);
+
         ListView lvlog = (ListView) findViewById(R.id.arraylog);
+
         final SQLLog sqlLog = new SQLLog(this);
+        final SQLBook sqlBook = new SQLBook(this);
         User s = LayOutAndLisView.getUser();
-        final ArrayList<Log> log = sqlLog.getAllLog();
-        if(log!=null){
-            final ArrayList<Book> book = LayOutAndLisView.Book_Deefault;
-            ArrayList<Book> booklog = new ArrayList<>();
-            for(Log y: log){
-                for(Book x: book){
-                    if(y.getAccount().equals(s.getAccount()) && y.getBookID() == x.getBookID()){
-                        booklog.add(x);
+        final ArrayList<Log> log = sqlLog.getAllLogs();
+        if(log != null){
+           ArrayList<Book> booklog = new ArrayList<>();
+            for(Log x: log){
+                    if(x.getAccount().equals(s.getAccount())){
+                        Book getbook= sqlBook.getBook(x.getBookID());
+                        booklog.add(getbook);
                     }
-                }
             }
             if(booklog != null){
                 adapter = new BookAdapter(this, R.layout.elemen_book, booklog);
@@ -58,7 +59,7 @@ public class ArrayLog extends AppCompatActivity {
                 Toast.makeText(ArrayLog.this, "Bạn Chưa Đăng Ký Mượn!!!", Toast.LENGTH_SHORT).show();
             }
         }else{
-            Toast.makeText(ArrayLog.this, "Bạn Chưa Đăng Ký Mượn!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ArrayLog.this, "Log Rỗng!!!", Toast.LENGTH_SHORT).show();
         }
         lvlog.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -102,7 +103,7 @@ public class ArrayLog extends AppCompatActivity {
         Intent intent = new Intent(ArrayLog.this, LogInformation.class);
         startActivity(intent);
     }
-    private void ResetSach() {
+    private void ResetSach(){
         Intent intent = new Intent(ArrayLog.this, ArrayLog.class);
         startActivity(intent);
 
